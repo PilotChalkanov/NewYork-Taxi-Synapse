@@ -1,6 +1,9 @@
 {
-	"name": "nyc_calendar_dim",
+	"name": "2_nyc_calendar_dim_explore",
 	"properties": {
+		"folder": {
+			"name": "nyc_taxi_scripts/discovery"
+		},
 		"content": {
 			"query": "USE nyc_taxi_data_discovery;\n\nEXEC sp_describe_first_result_set N'\nSELECT\n*\nFROM\n    OPENROWSET(\n        BULK ''calendar.csv'',\n        DATA_SOURCE =  ''nyc_taxi_data_raw'',\n        FORMAT = ''CSV'',\n        PARSER_VERSION = ''2.0'',\n        HEADER_ROW = TRUE\n    ) AS calendar\n'\n\nSELECT\n*\nFROM\n    OPENROWSET(\n        BULK 'calendar.csv',\n        DATA_SOURCE =  'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE\n    ) \n    WITH(\n        date_key INT,\n        date DATE,\n        year SMALLINT,\n        month TINYINT,\n        day TINYINT,\n        day_name VARCHAR(10),\n        day_of_year SMALLINT,\n        week_of_month TINYINT,\n        week_of_year TINYINT,\n        month_name VARCHAR(10),\n        year_month INT,\n        year_week INT\n    )\n    AS calendar\n\n\n\n",
 			"metadata": {
