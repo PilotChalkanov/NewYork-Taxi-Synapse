@@ -1,0 +1,20 @@
+{
+	"name": "5_payment_type_json",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi_scripts/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_data_discovery;\n\n\nSELECT \n    CAST(JSON_VALUE(jsonDoc, '$.payment_type')AS SMALLINT) payment_type,\n    CAST(JSON_VALUE(jsonDoc, '$.payment_type_desc')AS VARCHAR(20)) payment_type_description\n\nFROM OPENROWSET(\n    BULK 'payment_type.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    FIELDQUOTE = '0x0b',\n    ROWTERMINATOR = '0x0a'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n)\nAS paymenmt_type\n\nSELECT \n   *\nFROM OPENROWSET(\n    BULK 'payment_type.json',\n    DATA_SOURCE = 'nyc_taxi_data_raw',\n    FORMAT = 'CSV',\n    PARSER_VERSION = '1.0',\n    FIELDTERMINATOR = '0x0b',\n    FIELDQUOTE = '0x0b',\n    ROWTERMINATOR = '0x0a'\n) \nWITH(\n    jsonDoc NVARCHAR(MAX)\n)\nAS paymenmt_type\nCROSS APPLY OPENJSON(jsonDoc)\nWITH(\n    payment_type SMALLINT,\n    payment_type_description VARCHAR(20) '$.payment_type_desc'\n)",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_data_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

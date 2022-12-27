@@ -1,0 +1,20 @@
+{
+	"name": "4_explore_trip_type_tsv",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi_scripts/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_data_discovery;\n\nSELECT * \n    FROM OPENROWSET(\n        BULK 'trip_type.tsv',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW = TRUE,\n        DELIMITER = '\\t'     \n    )\n    WITH(\n        trip_type TINYINT 1,\n        trip_type_description VARCHAR(100) 2\n\n    ) AS trip_type;\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_data_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
