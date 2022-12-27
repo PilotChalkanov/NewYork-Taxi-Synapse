@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 1",
+	"name": "5_payment_type_nested_array",
 	"properties": {
 		"folder": {
 			"name": "nyc_taxi_scripts/discovery"
