@@ -1,0 +1,20 @@
+{
+	"name": "11_data_quality_check",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi_scripts/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_data_discovery;\n\nSELECT    \n    MIN(total_amount) AS min_total_amount,\n    MAX(total_amount) AS max_total_amount,\n    AVG(total_amount) AS avg_total_amount,\n    COUNT(1) AS total_number_of_records,\n    COUNT(total_amount) AS not_null_total_records\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n    )\nAS [result]\n\n\nSELECT    \n    payment_type,\n    count(1) AS num_records\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n    )\nAS [result]\nWHERE total_amount < 0\nGROUP BY payment_type\nORDER BY payment_type\n\n\nSELECT    \n    payment_type,\n    count(1) AS num_records\nFROM\n    OPENROWSET(\n        BULK 'trip_data_green_parquet/year=2020/month=01/',\n        FORMAT = 'PARQUET',\n        DATA_SOURCE = 'nyc_taxi_data_raw'\n    )\nAS [result]\nGROUP BY payment_type\nORDER BY payment_type",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_data_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

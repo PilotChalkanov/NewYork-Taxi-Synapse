@@ -1,0 +1,20 @@
+{
+	"name": "10_query_trip_data_delta",
+	"properties": {
+		"folder": {
+			"name": "nyc_taxi_scripts/discovery"
+		},
+		"content": {
+			"query": "USE nyc_taxi_data_discovery;\n\n\n-- general query for delta table\nSELECT TOP 100 *\nFROM \n    OPENROWSET(\n        BULK'trip_data_green_delta',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA' \n    )\nAS [result]\n\n-- good practice is to declare the type and format of the columns\n\nSELECT TOP 100 *\nFROM \n    OPENROWSET(\n        BULK'trip_data_green_delta',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA' \n    )\n    WITH(\n    VendorID INT,\n    lpep_pickup_datetime datetime2(7),\n    lpep_dropoff_datetime datetime2(7),\n    store_and_fwd_flag CHAR(1),\n    RatecodeID INT,\n    PULocationID INT,\n    DOLocationID INT,\n    passenger_count int,\n    trip_distance FLOAT,\n    fare_amount FLOAT,\n    extra FLOAT,\n    mta_tax FLOAT,\n    tip_amount FLOAT,\n    tolls_amount FLOAT,\n    ehail_fee INT,\n    improvement_surcharge FLOAT,\n    total_amount FLOAT,\n    payment_type INT,\n    trip_type INT,\n    congestion_surcharge FLOAT,\n    year VARCHAR(4),\n    month VARCHAR(2)\n    )   \nAS [result]\n\n-- If we want to target partition we use year and month\n\nSELECT TOP 100 *\nFROM \n    OPENROWSET(\n        BULK'trip_data_green_delta',\n        DATA_SOURCE = 'nyc_taxi_data_raw',\n        FORMAT = 'DELTA' \n    )\n    WITH(\n    VendorID INT,\n    lpep_pickup_datetime datetime2(7),\n    lpep_dropoff_datetime datetime2(7),\n    store_and_fwd_flag CHAR(1),\n    RatecodeID INT,\n    PULocationID INT,\n    DOLocationID INT,\n    passenger_count int,\n    trip_distance FLOAT,\n    fare_amount FLOAT,\n    extra FLOAT,\n    mta_tax FLOAT,\n    tip_amount FLOAT,\n    tolls_amount FLOAT,\n    ehail_fee INT,\n    improvement_surcharge FLOAT,\n    total_amount FLOAT,\n    payment_type INT,\n    trip_type INT,\n    congestion_surcharge FLOAT,\n    year VARCHAR(4),\n    month VARCHAR(2)\n    )    \nAS [result]\n WHERE year = '2020' AND month IN ('01','02')\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "nyc_taxi_data_discovery",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
